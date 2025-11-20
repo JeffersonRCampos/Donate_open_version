@@ -285,60 +285,53 @@ class _EditarAtividadeState extends State<EditarAtividade> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator(color: Colors.black)),
+      );
     }
+
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Editar Atividade'),
         backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
+        titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              // Campos para editar os dados principais da atividade
-              TextFormField(
-                controller: _tipoController,
-                decoration: const InputDecoration(labelText: 'Tipo'),
-              ),
+              _campo(_tipoController, 'Tipo'),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: _tituloController,
-                decoration: const InputDecoration(labelText: 'Título'),
-              ),
+              _campo(_tituloController, 'Título'),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: _descricaoController,
-                decoration: const InputDecoration(labelText: 'Descrição'),
-              ),
+              _campo(_descricaoController, 'Descrição'),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: _dataInicioController,
-                decoration: const InputDecoration(
-                    labelText: 'Data Início (dd/MM/yyyy)'),
-              ),
+              _campo(_dataInicioController, 'Data Início (dd/MM/yyyy)'),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: _dataFimController,
-                decoration:
-                    const InputDecoration(labelText: 'Data Fim (dd/MM/yyyy)'),
-              ),
+              _campo(_dataFimController, 'Data Fim (dd/MM/yyyy)'),
               const SizedBox(height: 20),
-              // Lista de itens com opções de editar e remover
               Expanded(
                 child: ListView.builder(
                   itemCount: _itens.length,
                   itemBuilder: (context, index) {
                     final item = _itens[index];
                     return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      color: Colors.white,
+                      elevation: 1,
                       child: ListTile(
-                        title:
-                            Text('${item['quantidade']} ${item['tipo_roupa']}'),
+                        title: Text(
+                          '${item['quantidade']} ${item['tipo_roupa']}',
+                          style: const TextStyle(color: Colors.black),
+                        ),
                         subtitle: Text(
-                            'Tamanho: ${item['tamanho']}, Gênero: ${item['genero']}'),
+                          'Tamanho: ${item['tamanho']}, Gênero: ${item['genero']}',
+                          style: const TextStyle(color: Colors.black54),
+                        ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -358,62 +351,67 @@ class _EditarAtividadeState extends State<EditarAtividade> {
                 ),
               ),
               const SizedBox(height: 16),
-              // Botões para adicionar item e salvar alterações
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  ElevatedButton(
-                    onPressed: _adicionarItem,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 20),
-                    ),
-                    child: const Text('Adicionar Item',
-                        style: TextStyle(fontSize: 16, color: Colors.white)),
-                  ),
-                  ElevatedButton(
-                    onPressed: _salvarAlteracoes,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 20),
-                    ),
-                    child: const Text('Salvar Alterações',
-                        style: TextStyle(fontSize: 16, color: Colors.white)),
-                  ),
+                  _botao('Adicionar Item', _adicionarItem),
+                  _botao('Salvar Alterações', _salvarAlteracoes),
                 ],
               ),
               const SizedBox(height: 10),
-              // Botões extras para Finalizar Atividade e Concluir Doações
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  ElevatedButton(
-                    onPressed: _finalizarAtividade,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 20),
-                    ),
-                    child: const Text('Finalizar Atividade',
-                        style: TextStyle(fontSize: 16, color: Colors.white)),
-                  ),
-                  ElevatedButton(
-                    onPressed: _concluirDoacoes,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 20),
-                    ),
-                    child: const Text('Concluir Doações',
-                        style: TextStyle(fontSize: 16, color: Colors.white)),
-                  ),
+                  _botaoCor(
+                      'Finalizar Atividade', _finalizarAtividade, Colors.red),
+                  _botaoCor('Concluir Doações', _concluirDoacoes, Colors.green),
                 ],
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _campo(TextEditingController c, String label) {
+    return TextFormField(
+      controller: c,
+      decoration: InputDecoration(
+        labelText: label,
+        filled: true,
+        fillColor: Colors.grey[200],
+        labelStyle: const TextStyle(color: Colors.black),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+      ),
+      style: const TextStyle(color: Colors.black),
+    );
+  }
+
+  Widget _botao(String texto, Function acao) {
+    return ElevatedButton(
+      onPressed: () => acao(),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.black,
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      ),
+      child: Text(
+        texto,
+        style: const TextStyle(color: Colors.white, fontSize: 16),
+      ),
+    );
+  }
+
+  Widget _botaoCor(String texto, Function acao, Color cor) {
+    return ElevatedButton(
+      onPressed: () => acao(),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: cor,
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      ),
+      child: Text(
+        texto,
+        style: const TextStyle(color: Colors.white, fontSize: 16),
       ),
     );
   }
