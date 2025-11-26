@@ -29,7 +29,6 @@ class _EditarAtividadeState extends State<EditarAtividade> {
     _carregarAtividade();
   }
 
-  /// Carrega os dados da atividade com base no ID.
   Future<void> _carregarAtividade() async {
     if (widget.atividadeId != null) {
       try {
@@ -54,7 +53,6 @@ class _EditarAtividadeState extends State<EditarAtividade> {
     }
   }
 
-  /// Permite editar um item da lista.
   Future<void> _editarItem(int index) async {
     final currentItem = _itens[index];
     final tipoController =
@@ -117,14 +115,12 @@ class _EditarAtividadeState extends State<EditarAtividade> {
     }
   }
 
-  /// Remove um item da lista.
   void _removerItem(int index) {
     setState(() {
       _itens.removeAt(index);
     });
   }
 
-  /// Converte uma string no formato 'dd/MM/yyyy' para DateTime.
   DateTime? _parseData(String data) {
     try {
       return DateFormat('dd/MM/yyyy').parse(data);
@@ -133,7 +129,6 @@ class _EditarAtividadeState extends State<EditarAtividade> {
     }
   }
 
-  /// Salva as alterações na atividade; se [novoStatus] for informado, atualiza o status.
   Future<void> _salvarAlteracoes({String? novoStatus}) async {
     if (_formKey.currentState!.validate()) {
       final dataInicio = _parseData(_dataInicioController.text);
@@ -166,7 +161,6 @@ class _EditarAtividadeState extends State<EditarAtividade> {
     }
   }
 
-  /// Finaliza a atividade apenas zerando as quantidades dos itens.
   Future<void> _finalizarAtividade() async {
     for (var item in _itens) {
       item['quantidade'] = 0;
@@ -174,7 +168,6 @@ class _EditarAtividadeState extends State<EditarAtividade> {
     await _salvarAlteracoes(novoStatus: 'concluída');
   }
 
-  /// Atualiza o estoque para um item específico
   Future<bool> _atualizarEstoqueItem({
     required String tipo,
     required String genero,
@@ -206,7 +199,6 @@ class _EditarAtividadeState extends State<EditarAtividade> {
     }
   }
 
-  /// Tenta descontar o estoque para cada item; se todos forem descontados, define o status para "concluída".
   Future<void> _concluirDoacoes() async {
     bool todosDescontados = true;
     for (var item in _itens) {
@@ -233,7 +225,6 @@ class _EditarAtividadeState extends State<EditarAtividade> {
     }
   }
 
-  /// Adiciona um novo item à lista.
   Future<void> _adicionarItem() async {
     final tipo = await _mostrarDialogoItem('Tipo de Roupa');
     final genero = await _mostrarDialogoItem('Gênero');
@@ -352,19 +343,23 @@ class _EditarAtividadeState extends State<EditarAtividade> {
               ),
               const SizedBox(height: 16),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _botao('Adicionar Item', _adicionarItem),
-                  _botao('Salvar Alterações', _salvarAlteracoes),
+                  Expanded(child: _botao('Adicionar Item', _adicionarItem)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                      child: _botao('Salvar Alterações', _salvarAlteracoes)),
                 ],
               ),
               const SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _botaoCor(
-                      'Finalizar Atividade', _finalizarAtividade, Colors.red),
-                  _botaoCor('Concluir Doações', _concluirDoacoes, Colors.green),
+                  Expanded(
+                      child: _botaoCor('Finalizar Atividade',
+                          _finalizarAtividade, Colors.red)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                      child: _botaoCor(
+                          'Concluir Doações', _concluirDoacoes, Colors.green)),
                 ],
               ),
             ],
@@ -393,11 +388,12 @@ class _EditarAtividadeState extends State<EditarAtividade> {
       onPressed: () => acao(),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.black,
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 15),
       ),
       child: Text(
         texto,
         style: const TextStyle(color: Colors.white, fontSize: 16),
+        textAlign: TextAlign.center,
       ),
     );
   }
@@ -407,11 +403,12 @@ class _EditarAtividadeState extends State<EditarAtividade> {
       onPressed: () => acao(),
       style: ElevatedButton.styleFrom(
         backgroundColor: cor,
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 15),
       ),
       child: Text(
         texto,
         style: const TextStyle(color: Colors.white, fontSize: 16),
+        textAlign: TextAlign.center,
       ),
     );
   }
